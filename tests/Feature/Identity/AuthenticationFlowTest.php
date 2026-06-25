@@ -21,6 +21,21 @@ class AuthenticationFlowTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_login_ignores_stale_intended_url_and_redirects_to_dashboard(): void
+    {
+        ['tenant' => $tenant, 'user' => $user] = $this->tenantContext(['dashboard.view'], 'tenant_admin_login_redirect');
+        $user->forceFill(['password' => 'KnownPassword!123'])->save();
+
+        $this
+            ->withSession(['url.intended' => url('/movements/01KVZENQGE26DPMWR609JHFAYJ')])
+            ->post(route('login.store'), ['email' => $user->email, 'password' => 'KnownPassword!123'])
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionMissing('url.intended')
+            ->assertSessionHas('active_tenant', $tenant->public_id);
+
+        $this->assertAuthenticatedAs($user);
+    }
+
     public function test_wrong_password_invited_and_blocked_users_do_not_authenticate(): void
     {
         ['user' => $active] = $this->tenantContext([], 'auth_active');

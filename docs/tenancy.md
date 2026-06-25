@@ -11,3 +11,6 @@ O tenant ativo vem exclusivamente de `session.active_tenant`, gravado apos verif
 Categorias, tipos, marcas, modelos, campos customizados e ativos sao tenant-scoped. Unidades de medida e condicoes podem ser globais (`tenant_id = null`) ou do tenant. Queries usam scopes `forTenant` ou `availableToTenant`.
 
 Relacoes enviadas por formulario sao resolvidas por ULID publico dentro do tenant atual. IDs internos numericos nao sao aceitos como entrada publica.
+## Sprint 2 - Movimentações
+
+Responsáveis, movimentações, termos e filtros são sempre escopados por `tenant_id`. Ativos, unidades, localizações e responsáveis de outro tenant retornam 404 seguro nas rotas de domínio.

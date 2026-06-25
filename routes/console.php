@@ -1,8 +1,10 @@
 <?php
 
+use App\Domain\Assets\Services\AssetReturnAlertService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -30,3 +32,20 @@ Artisan::command('taggo:demo-setup {--fresh : Recria o banco antes de semear os 
 
     return 0;
 })->purpose('Prepara dados locais de demonstracao do Taggo Assets');
+
+Artisan::command('assets:returns:upcoming', function () {
+    $count = app(AssetReturnAlertService::class)->sendUpcoming();
+    $this->info("Alertas próximos do vencimento enviados: {$count}");
+
+    return 0;
+})->purpose('Envia alertas idempotentes para retornos patrimoniais próximos do vencimento');
+
+Artisan::command('assets:returns:overdue', function () {
+    $count = app(AssetReturnAlertService::class)->sendOverdue();
+    $this->info("Alertas de retorno vencido enviados: {$count}");
+
+    return 0;
+})->purpose('Envia alertas idempotentes para retornos patrimoniais vencidos');
+
+Schedule::command('assets:returns:upcoming')->dailyAt('08:00')->withoutOverlapping();
+Schedule::command('assets:returns:overdue')->dailyAt('08:10')->withoutOverlapping();

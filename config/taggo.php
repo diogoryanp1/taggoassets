@@ -10,4 +10,5 @@ return [
     'seed_demo_data' => (bool) env('SEED_DEMO_DATA', false),
     'demo_admin_email' => env('DEMO_ADMIN_EMAIL', 'admin@taggo.local'),
     'demo_admin_password' => env('DEMO_ADMIN_PASSWORD'),
+    'asset_return_reminder_days' => (int) env('ASSET_RETURN_REMINDER_DAYS', 3),
 ];

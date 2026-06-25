@@ -2,21 +2,29 @@
 
 namespace Database\Seeders;
 
+use App\Domain\Assets\Enums\AssetMovementDocumentType;
 use App\Domain\Assets\Enums\AssetStatus;
 use App\Domain\Assets\Models\Asset;
 use App\Domain\Assets\Models\AssetBrand;
 use App\Domain\Assets\Models\AssetCategory;
 use App\Domain\Assets\Models\AssetCondition;
+use App\Domain\Assets\Models\AssetCustodian;
 use App\Domain\Assets\Models\AssetModel;
+use App\Domain\Assets\Models\AssetMovement;
+use App\Domain\Assets\Models\AssetMovementDocument;
 use App\Domain\Assets\Models\AssetType;
 use App\Domain\Assets\Models\UnitOfMeasure;
+use App\Domain\Assets\Services\AssetTermGenerator;
+use App\Domain\Documents\Models\PrivateDocument;
 use App\Domain\Identity\Models\Role;
 use App\Domain\Organizations\Models\Location;
 use App\Domain\Organizations\Models\OrganizationalUnit;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DemoTenantSeeder extends Seeder
@@ -90,6 +98,65 @@ class DemoTenantSeeder extends Seeder
             $type = $types[$sample['type']];
             $model = $sample['model'] ? $models->firstWhere('name', $sample['model']) : null;
             Asset::updateOrCreate(['tenant_id' => $tenant->id, 'asset_number' => $sample['number']], ['description' => $sample['description'], 'asset_category_id' => $type->asset_category_id, 'asset_type_id' => $type->id, 'brand_id' => $sample['brand'] ? $brands[$sample['brand']]->id : null, 'model_id' => $model?->id, 'unit_of_measure_id' => $unit->id, 'condition_id' => $condition->id, 'status' => $sample['status']->value, 'organizational_unit_id' => $units[$sample['unit']]->id, 'location_id' => $locations[$sample['location']]->id, 'serial_number' => $type->requires_serial_number ? 'SN-'.$sample['number'] : null, 'acquisition_date' => now()->subMonths(2)->toDateString(), 'acquisition_value_cents' => 250000, 'is_active' => $sample['status'] !== AssetStatus::Inactive, 'created_by' => $admin->id, 'updated_by' => $admin->id]);
+        }
+
+        $custodians = collect([
+            ['name' => 'Ana Paula Ribeiro', 'registration' => 'MAT-1001', 'unit' => 'ADM', 'email' => 'ana.ribeiro@example.test', 'position' => 'Coordenadora administrativa'],
+            ['name' => 'Carlos Henrique Souza', 'registration' => 'MAT-2001', 'unit' => 'TEC', 'email' => 'carlos.souza@example.test', 'position' => 'Analista de tecnologia'],
+            ['name' => 'Marina Costa Lima', 'registration' => 'MAT-3001', 'unit' => 'ALM', 'email' => 'marina.lima@example.test', 'position' => 'Responsavel pelo almoxarifado'],
+        ])->mapWithKeys(fn (array $data) => [$data['registration'] => AssetCustodian::updateOrCreate(
+            ['tenant_id' => $tenant->id, 'registration_number' => $data['registration']],
+            ['organizational_unit_id' => $units[$data['unit']]->id, 'name' => $data['name'], 'email' => $data['email'], 'position' => $data['position'], 'is_active' => true, 'created_by' => $admin->id, 'updated_by' => $admin->id]
+        )]);
+
+        Asset::query()->where('tenant_id', $tenant->id)->where('asset_number', 'PAT-DEMO-0001')->update(['custodian_id' => $custodians['MAT-1001']->id]);
+        Asset::query()->where('tenant_id', $tenant->id)->where('asset_number', 'PAT-DEMO-0002')->update(['custodian_id' => $custodians['MAT-2001']->id]);
+        Asset::query()->where('tenant_id', $tenant->id)->where('asset_number', 'PAT-DEMO-0004')->update(['custodian_id' => $custodians['MAT-1001']->id]);
+
+        $movementSamples = [
+            ['asset' => 'PAT-DEMO-0001', 'type' => 'initial_assignment', 'status' => 'completed', 'origin_unit' => 'ALM', 'dest_unit' => 'ADM', 'origin_location' => 'DEPOSITO', 'dest_location' => 'PREDIO', 'origin_custodian' => null, 'dest_custodian' => 'MAT-1001', 'reason' => 'Atribuicao inicial para uso administrativo.', 'effective_at' => now()->subDays(10)],
+            ['asset' => 'PAT-DEMO-0002', 'type' => 'internal_transfer', 'status' => 'pending_approval', 'origin_unit' => 'TEC', 'dest_unit' => 'ADM', 'origin_location' => 'SALA-TEC', 'dest_location' => 'PREDIO', 'origin_custodian' => 'MAT-2001', 'dest_custodian' => 'MAT-1001', 'reason' => 'Transferencia solicitada para apoio temporario ao atendimento.', 'effective_at' => null],
+            ['asset' => 'PAT-DEMO-0004', 'type' => 'loan', 'status' => 'completed', 'origin_unit' => 'ADM', 'dest_unit' => 'ADM', 'origin_location' => 'PREDIO', 'dest_location' => 'PREDIO', 'origin_custodian' => 'MAT-1001', 'dest_custodian' => 'MAT-1001', 'reason' => 'Emprestimo para reuniao externa.', 'expected_return_at' => now()->addDays(5), 'effective_at' => now()->subDay()],
+            ['asset' => 'PAT-DEMO-0005', 'type' => 'temporary_checkout', 'status' => 'completed', 'origin_unit' => 'ALM', 'dest_unit' => 'ALM', 'origin_location' => 'DEPOSITO', 'dest_location' => 'DEPOSITO', 'origin_custodian' => null, 'dest_custodian' => 'MAT-3001', 'reason' => 'Saida temporaria vencida para avaliacao.', 'expected_return_at' => now()->subDays(2), 'effective_at' => now()->subDays(8)],
+        ];
+        foreach ($movementSamples as $sample) {
+            $asset = Asset::query()->where('tenant_id', $tenant->id)->where('asset_number', $sample['asset'])->firstOrFail();
+            AssetMovement::updateOrCreate(['tenant_id' => $tenant->id, 'asset_id' => $asset->id, 'movement_type' => $sample['type'], 'reason' => $sample['reason']], [
+                'status' => $sample['status'],
+                'origin_organizational_unit_id' => $units[$sample['origin_unit']]->id,
+                'destination_organizational_unit_id' => $units[$sample['dest_unit']]->id,
+                'origin_location_id' => $locations[$sample['origin_location']]->id,
+                'destination_location_id' => $locations[$sample['dest_location']]->id,
+                'origin_custodian_id' => $sample['origin_custodian'] ? $custodians[$sample['origin_custodian']]->id : null,
+                'destination_custodian_id' => $sample['dest_custodian'] ? $custodians[$sample['dest_custodian']]->id : null,
+                'requested_by' => $admin->id,
+                'approved_by' => $sample['status'] === 'pending_approval' ? null : $admin->id,
+                'approved_at' => $sample['status'] === 'pending_approval' ? null : now()->subDays(9),
+                'effective_at' => $sample['effective_at'] ?? null,
+                'expected_return_at' => $sample['expected_return_at'] ?? null,
+                'metadata' => ['demo' => true],
+            ]);
+        }
+
+        $termMovement = AssetMovement::query()->where('tenant_id', $tenant->id)->where('status', 'completed')->where('movement_type', 'initial_assignment')->first();
+        if ($termMovement) {
+            app(AssetTermGenerator::class)->generate($termMovement, $admin);
+            foreach ([AssetMovementDocumentType::SignedTerm, AssetMovementDocumentType::Receipt] as $type) {
+                $key = 'tenants/'.$tenant->public_id.'/movement-documents/demo/'.$termMovement->public_id.'-'.$type->value.'.pdf';
+                if (! Storage::disk('private')->exists($key)) {
+                    Storage::disk('private')->put($key, Pdf::loadHTML('<h1>'.$type->label().'</h1><p>Documento fictício de demonstração do Taggo Assets.</p>')->output());
+                }
+                $document = PrivateDocument::firstOrCreate(['tenant_id' => $tenant->id, 'sha256' => hash_file('sha256', Storage::disk('private')->path($key))], [
+                    'organizational_unit_id' => $termMovement->destination_organizational_unit_id ?? $termMovement->origin_organizational_unit_id,
+                    'uploaded_by' => $admin->id,
+                    'original_name' => Str::slug($type->label().'-demo').'.pdf',
+                    'stored_name' => $key,
+                    'mime_type' => 'application/pdf',
+                    'size_bytes' => Storage::disk('private')->size($key),
+                    'disk' => 'private',
+                ]);
+                AssetMovementDocument::firstOrCreate(['asset_movement_id' => $termMovement->id, 'private_document_id' => $document->id], ['tenant_id' => $tenant->id, 'document_type' => $type->value, 'uploaded_by' => $admin->id]);
+            }
         }
 
         if ($this->command) {

@@ -11,3 +11,13 @@ Para validar infraestrutura local no Windows/Laragon: inicie PostgreSQL e Redis,
 Ao adicionar recursos tenant-scoped, siga o padrao: model com `public_id`, scope de tenant e factory; request aceitando apenas campos publicos; controller resolvendo tenant e relacoes no backend; policy por permissao; auditoria com payload sanitizado; testes de CRUD, RBAC, tenancy, IDOR e binding.
 
 Nao use seeders como pre-condicao de factories.
+## Alertas da Sprint 2
+
+Execute manualmente:
+
+```bash
+php artisan assets:returns:upcoming
+php artisan assets:returns:overdue
+```
+
+Em produção, configure o cron do Laravel Scheduler. Os comandos usam Redis/queue para notificações e são idempotentes por marco diário.

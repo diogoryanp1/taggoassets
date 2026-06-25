@@ -42,3 +42,8 @@ A Sprint 1 cobre catalogo patrimonial, cadastro inicial de ativos, tenancy, RBAC
 Use `redis-cli ping`, `php artisan optimize:clear`, `php artisan migrate:fresh --seed --force`, `php artisan test`, `vendor/bin/pint --test`, `composer analyse` e `npm run build`. PostgreSQL e Redis precisam estar ativos localmente para a suite completa.
 
 Consulte `docs/` para decisões, segurança, tenancy, desempenho, desenvolvimento e deploy.
+## Sprint 2
+
+Inclui responsáveis patrimoniais, movimentações, workflow de aprovação/conclusão, histórico no ativo, termos privados e indicadores reais no dashboard. A implementação preserva PostgreSQL, Redis/Predis, tenancy, RBAC, policies, ULIDs, auditoria, paginação, storage privado, Vite, Pint e PHPStan.
+
+Fechamento definitivo: termos agora usam `barryvdh/laravel-dompdf`, documentos complementares são vinculados às movimentações com storage privado e alertas diários de retorno são executados por comandos agendados.

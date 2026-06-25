@@ -94,10 +94,11 @@ class AssetController extends Controller
     {
         abort_unless($asset->tenant_id === $currentTenant->id(), 404);
         $this->authorize('viewAny', Asset::class);
-        $asset->load(['category:id,name', 'type:id,name', 'brand:id,name', 'model:id,name', 'unitOfMeasure:id,name,symbol', 'condition:id,name', 'organizationalUnit:id,name', 'location:id,name', 'creator:id,name']);
+        $asset->load(['category:id,name', 'type:id,name', 'brand:id,name', 'model:id,name', 'unitOfMeasure:id,name,symbol', 'condition:id,name', 'organizationalUnit:id,name', 'location:id,name', 'custodian:id,name', 'creator:id,name']);
+        $movements = $asset->movements()->forTenant($currentTenant->id())->with(['originUnit:id,name', 'destinationUnit:id,name', 'originCustodian:id,name', 'destinationCustodian:id,name', 'requester:id,name', 'approver:id,name'])->latest()->paginate(10, ['*'], 'movements_page')->withQueryString();
         $auditLogs = AuditLog::query()->where('tenant_id', $currentTenant->id())->where('entity_type', Asset::class)->where('entity_id', $asset->id)->latest('created_at')->limit(5)->get();
 
-        return view('assets.show', compact('asset', 'auditLogs'));
+        return view('assets.show', compact('asset', 'auditLogs', 'movements'));
     }
 
     public function update(StoreAssetRequest $request, Asset $asset, CurrentTenant $currentTenant, AssetWriter $writer, AuditLogger $audit): RedirectResponse

@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Patrimônio / Responsáveis / Novo</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Novo responsável</h1><form method="POST" action="{{ route('custodians.store') }}">@include('custodians._form')</form></x-layouts.app>

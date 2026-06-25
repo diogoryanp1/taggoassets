@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Asset extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['asset_number', 'legacy_number', 'description', 'asset_category_id', 'asset_type_id', 'brand_id', 'model_id', 'unit_of_measure_id', 'condition_id', 'status', 'organizational_unit_id', 'location_id', 'acquisition_date', 'acquisition_value_cents', 'serial_number', 'notes', 'custom_values', 'is_active', 'created_by', 'updated_by'];
+    protected $fillable = ['asset_number', 'legacy_number', 'description', 'asset_category_id', 'asset_type_id', 'brand_id', 'model_id', 'unit_of_measure_id', 'condition_id', 'status', 'organizational_unit_id', 'location_id', 'custodian_id', 'acquisition_date', 'acquisition_value_cents', 'serial_number', 'notes', 'custom_values', 'is_active', 'created_by', 'updated_by'];
 
     protected function casts(): array
     {
@@ -86,6 +87,18 @@ class Asset extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    /** @return BelongsTo<AssetCustodian, $this> */
+    public function custodian(): BelongsTo
+    {
+        return $this->belongsTo(AssetCustodian::class);
+    }
+
+    /** @return HasMany<AssetMovement, $this> */
+    public function movements(): HasMany
+    {
+        return $this->hasMany(AssetMovement::class);
     }
 
     /** @return BelongsTo<User, $this> */

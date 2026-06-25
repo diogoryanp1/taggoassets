@@ -24,13 +24,32 @@ class DatabaseSeeder extends Seeder
         if (app()->environment('production')) {
             return;
         }
-        $permissions = ['dashboard.view', 'users.view', 'users.create', 'users.update', 'users.block', 'organizations.view', 'organizations.create', 'organizations.update', 'assets.view', 'assets.create', 'assets.update', 'assets.approve', 'assets.transfer', 'assets.delete_draft', 'audit.view', 'settings.manage', 'asset_categories.view', 'asset_categories.create', 'asset_categories.update', 'asset_categories.deactivate', 'asset_categories.reactivate', 'asset_categories.manage', 'asset_types.view', 'asset_types.create', 'asset_types.update', 'asset_types.deactivate', 'asset_types.reactivate', 'asset_types.manage', 'asset_brands.view', 'asset_brands.create', 'asset_brands.update', 'asset_brands.deactivate', 'asset_brands.reactivate', 'asset_brands.manage', 'asset_models.view', 'asset_models.create', 'asset_models.update', 'asset_models.deactivate', 'asset_models.reactivate', 'asset_models.manage', 'units_of_measure.view', 'units_of_measure.manage', 'units_of_measure.reactivate', 'asset_conditions.view', 'asset_conditions.manage', 'asset_conditions.reactivate', 'asset_custom_fields.view', 'asset_custom_fields.manage', 'asset_custom_fields.reactivate', 'assets.deactivate', 'assets.reactivate', 'assets.manage', 'assets.set_manual_number'];
+        $permissions = [
+            'dashboard.view', 'users.view', 'users.create', 'users.update', 'users.block', 'organizations.view', 'organizations.create', 'organizations.update',
+            'assets.view', 'assets.create', 'assets.update', 'assets.approve', 'assets.transfer', 'assets.delete_draft', 'assets.deactivate', 'assets.reactivate', 'assets.manage', 'assets.set_manual_number',
+            'audit.view', 'settings.manage',
+            'asset_categories.view', 'asset_categories.create', 'asset_categories.update', 'asset_categories.deactivate', 'asset_categories.reactivate', 'asset_categories.manage',
+            'asset_types.view', 'asset_types.create', 'asset_types.update', 'asset_types.deactivate', 'asset_types.reactivate', 'asset_types.manage',
+            'asset_brands.view', 'asset_brands.create', 'asset_brands.update', 'asset_brands.deactivate', 'asset_brands.reactivate', 'asset_brands.manage',
+            'asset_models.view', 'asset_models.create', 'asset_models.update', 'asset_models.deactivate', 'asset_models.reactivate', 'asset_models.manage',
+            'units_of_measure.view', 'units_of_measure.manage', 'units_of_measure.reactivate',
+            'asset_conditions.view', 'asset_conditions.manage', 'asset_conditions.reactivate',
+            'asset_custom_fields.view', 'asset_custom_fields.manage', 'asset_custom_fields.reactivate',
+            'asset_custodians.view', 'asset_custodians.create', 'asset_custodians.update', 'asset_custodians.deactivate',
+            'asset_movements.view', 'asset_movements.create', 'asset_movements.approve', 'asset_movements.reject', 'asset_movements.cancel', 'asset_movements.complete',
+            'asset_terms.view', 'asset_terms.generate', 'asset_terms.download',
+            'asset_movement_documents.view', 'asset_movement_documents.upload', 'asset_movement_documents.download', 'asset_movement_documents.deactivate',
+        ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission], ['label' => $permission]);
         }
         $map = [
-            'super_admin' => $permissions, 'tenant_admin' => $permissions, 'manager' => ['dashboard.view', 'users.view', 'organizations.view', 'organizations.create', 'organizations.update', 'assets.view', 'assets.create', 'assets.update', 'assets.approve', 'assets.transfer', 'asset_categories.view', 'asset_categories.create', 'asset_categories.update', 'asset_types.view', 'asset_types.create', 'asset_types.update', 'asset_brands.view', 'asset_brands.create', 'asset_brands.update', 'asset_models.view', 'asset_models.create', 'asset_models.update', 'units_of_measure.view', 'asset_conditions.view', 'asset_custom_fields.view'],
-            'member' => ['dashboard.view', 'assets.view', 'assets.create', 'assets.update'], 'auditor' => ['dashboard.view', 'assets.view', 'audit.view', 'asset_categories.view', 'asset_types.view', 'asset_brands.view', 'asset_models.view', 'units_of_measure.view', 'asset_conditions.view', 'asset_custom_fields.view'], 'viewer' => ['dashboard.view', 'assets.view', 'organizations.view', 'asset_categories.view', 'asset_types.view', 'asset_brands.view', 'asset_models.view', 'units_of_measure.view', 'asset_conditions.view'],
+            'super_admin' => $permissions,
+            'tenant_admin' => $permissions,
+            'manager' => ['dashboard.view', 'users.view', 'organizations.view', 'organizations.create', 'organizations.update', 'assets.view', 'assets.create', 'assets.update', 'assets.approve', 'assets.transfer', 'asset_categories.view', 'asset_categories.create', 'asset_categories.update', 'asset_types.view', 'asset_types.create', 'asset_types.update', 'asset_brands.view', 'asset_brands.create', 'asset_brands.update', 'asset_models.view', 'asset_models.create', 'asset_models.update', 'units_of_measure.view', 'asset_conditions.view', 'asset_custom_fields.view', 'asset_custodians.view', 'asset_custodians.create', 'asset_custodians.update', 'asset_movements.view', 'asset_movements.create', 'asset_movements.approve', 'asset_movements.reject', 'asset_movements.cancel', 'asset_movements.complete', 'asset_terms.view', 'asset_terms.generate', 'asset_terms.download', 'asset_movement_documents.view', 'asset_movement_documents.upload', 'asset_movement_documents.download', 'asset_movement_documents.deactivate'],
+            'member' => ['dashboard.view', 'assets.view', 'assets.create', 'assets.update', 'asset_custodians.view', 'asset_movements.view', 'asset_movements.create', 'asset_movements.complete', 'asset_terms.view', 'asset_terms.download', 'asset_movement_documents.view', 'asset_movement_documents.upload', 'asset_movement_documents.download'],
+            'auditor' => ['dashboard.view', 'assets.view', 'audit.view', 'asset_categories.view', 'asset_types.view', 'asset_brands.view', 'asset_models.view', 'units_of_measure.view', 'asset_conditions.view', 'asset_custom_fields.view', 'asset_custodians.view', 'asset_movements.view', 'asset_terms.view', 'asset_terms.download', 'asset_movement_documents.view', 'asset_movement_documents.download'],
+            'viewer' => ['dashboard.view', 'assets.view', 'organizations.view', 'asset_categories.view', 'asset_types.view', 'asset_brands.view', 'asset_models.view', 'units_of_measure.view', 'asset_conditions.view', 'asset_custodians.view', 'asset_movements.view', 'asset_terms.view', 'asset_movement_documents.view'],
         ];
         $roles = [];
         foreach ($map as $name => $grants) {

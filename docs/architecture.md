@@ -11,3 +11,10 @@ Nao use `Model::find()` para recurso tenant-scoped: inicie por `forTenant(app(Cu
 O dominio de patrimonio fica em `App\Domain\Assets`, com models de catalogo, enum de status e services de escrita/numero patrimonial. HTTP controllers mantem orquestracao, requests validam formato e services aplicam invariantes transacionais.
 
 Auditoria fica em `App\Domain\Audit`; `AuditLogger` centraliza entidade, tenant, usuario, request ID e payload sanitizado.
+## Sprint 2 - Movimentações
+
+A base operacional de movimentações adiciona `AssetCustodian` e `AssetMovement` ao domínio de ativos. O workflow fica centralizado em `AssetMovementWorkflowService`, com origem derivada do ativo, transações, `lockForUpdate()` e atualização do ativo apenas na conclusão.
+
+Termos são gerados por ação explícita e persistidos como `PrivateDocument` em storage privado.
+
+O fechamento definitivo usa `asset_movement_documents` para anexos complementares e `AssetReturnAlertService` para alertas idempotentes de retornos próximos ou vencidos.

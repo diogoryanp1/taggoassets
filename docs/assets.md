@@ -17,3 +17,6 @@ O formulario usa selecoes progressivas autenticadas para categoria/tipo, marca/m
 ## Detalhe
 
 A pagina de detalhe mostra identificacao, classificacao, localizacao, aquisicao, serie, valores customizados, observacoes, criador, datas principais e auditoria resumida. Documentos ficam acessiveis por acao, sem carregamento automatico.
+## Sprint 2 - Histórico patrimonial
+
+Ativos passam a ter responsável patrimonial opcional e aba Histórico baseada em `asset_movements`. O histórico é registro de domínio imutável, separado dos logs de auditoria.

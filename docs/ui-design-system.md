@@ -28,3 +28,6 @@ Alpine.js consome endpoints autenticados para categoria/tipo, marca/modelo, unid
 ## Responsividade e acessibilidade
 
 As telas foram estruturadas para 360px, 768px, 1024px e 1440px com grids responsivos, foco visivel, labels, `aria-label` em comandos iconicos e estados textuais que nao dependem apenas de cor.
+## Sprint 2 - Telas operacionais
+
+As telas de responsáveis e movimentações reutilizam cards, tabelas, filtros, badges e formulários existentes. A criação de movimentação usa seções numeradas em vez de wizard complexo, com resumo lateral e origem derivada pelo backend.

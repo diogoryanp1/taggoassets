@@ -2,6 +2,7 @@
 
 namespace App\Domain\Documents\Models;
 
+use App\Domain\Assets\Models\AssetMovementDocument;
 use App\Domain\Organizations\Models\OrganizationalUnit;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Models\User;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class PrivateDocument extends Model
@@ -49,6 +51,12 @@ class PrivateDocument extends Model
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    /** @return HasMany<AssetMovementDocument, $this> */
+    public function movementLinks(): HasMany
+    {
+        return $this->hasMany(AssetMovementDocument::class);
     }
 
     /** @param Builder<PrivateDocument> $query */

@@ -41,7 +41,9 @@ class AuthenticatedSessionController
             $request->session()->put('active_tenant', $tenant->public_id);
         }
 
-        return redirect()->intended(route('dashboard'));
+        $request->session()->forget('url.intended');
+
+        return redirect()->route('dashboard');
     }
 
     public function destroy(Request $request, AuditLogger $audit): RedirectResponse

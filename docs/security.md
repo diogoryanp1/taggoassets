@@ -13,3 +13,8 @@ As rotas administrativas usam policies, tenant atual resolvido em middleware e b
 Mass assignment de `tenant_id`, `public_id`, `created_by` e `updated_by` nao e aceito por requests. Esses campos sao derivados no backend.
 
 Endpoints progressivos sao autenticados, passam por policy e filtram por tenant antes de retornar opcoes.
+## Sprint 2 - Movimentações
+
+Movimentações bloqueiam campos de origem, solicitante, aprovador e status vindos do frontend. Relações de destino são resolvidas por ULID público e validadas no tenant atual. Documentos de termos usam storage privado, SHA-256 e rota protegida por policy.
+
+Documentos complementares aceitam apenas PDF, PNG e JPEG, não expõem path/hash interno e usam permissões específicas de movimentação. Vínculos inativados deixam de ser baixáveis.
