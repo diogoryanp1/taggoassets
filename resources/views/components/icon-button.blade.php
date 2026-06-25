@@ -1,0 +1,1 @@
+@props(['label', 'type' => 'button'])<button type="{{ $type }}" aria-label="{{ $label }}" title="{{ $label }}" {{ $attributes->merge(['class' => 'inline-flex h-10 w-10 items-center justify-center rounded-control text-sm font-semibold text-primary hover:bg-surface-muted disabled:opacity-60']) }}>{{ $slot }}</button>

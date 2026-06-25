@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Campos / Criar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Cadastrar campo customizado</h1><x-card><form method="POST" action="{{ route('catalog.custom-fields.store') }}">@csrf @include('catalog.custom-fields._form')</form></x-card></x-layouts.app>

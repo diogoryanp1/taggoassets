@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catálogo / Categorias / Nova</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Nova categoria</h1><x-card><form method="POST" action="{{ route('catalog.categories.store') }}">@csrf @include('catalog.categories._form')</form></x-card></x-layouts.app>

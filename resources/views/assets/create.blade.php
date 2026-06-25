@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Patrimônio / Ativos / Novo</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Cadastrar ativo</h1><x-card><form method="POST" action="{{ route('assets.store') }}">@csrf @include('assets._form')</form></x-card></x-layouts.app>

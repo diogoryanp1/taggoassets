@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Condicoes / Editar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Editar condicao</h1><x-card><form method="POST" action="{{ route('catalog.conditions.update', $condition) }}">@csrf @method('PUT') @include('catalog.conditions._form')</form></x-card></x-layouts.app>

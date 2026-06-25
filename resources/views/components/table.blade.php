@@ -1,0 +1,1 @@
+<div class="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-200"><table {{ $attributes->merge(['class' => 'min-w-full divide-y divide-gray-200 text-left text-sm']) }}>{{ $slot }}</table></div>

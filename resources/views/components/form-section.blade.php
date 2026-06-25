@@ -1,0 +1,1 @@
+@props(['title' => null])<section {{ $attributes->merge(['class' => 'space-y-4']) }}>@if($title)<h2 class="text-sm font-semibold uppercase text-text-secondary">{{ $title }}</h2>@endif{{ $slot }}</section>

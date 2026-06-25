@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Marcas / Criar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Cadastrar marca</h1><x-card><form method="POST" action="{{ route('catalog.brands.store') }}">@csrf @include('catalog.brands._form')</form></x-card></x-layouts.app>

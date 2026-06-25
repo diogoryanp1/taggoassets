@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catálogo / Categorias / Editar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Editar categoria</h1><x-card><form method="POST" action="{{ route('catalog.categories.update', $category) }}">@csrf @method('PUT') @include('catalog.categories._form')</form></x-card></x-layouts.app>

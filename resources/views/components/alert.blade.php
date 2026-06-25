@@ -1,0 +1,1 @@
+@props(['type' => 'info'])<div {{ $attributes->merge(['class' => 'mb-4 rounded-md p-3 text-sm '.($type === 'success' ? 'bg-emerald-50 text-emerald-800' : 'bg-blue-50 text-blue-800')]) }}>{{ $slot }}</div>

@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Patrimônio / Ativos / Editar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Editar ativo</h1><x-card><form method="POST" action="{{ route('assets.update', $asset) }}">@csrf @method('PUT') @include('assets._form')</form></x-card></x-layouts.app>

@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Condicoes / Criar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Cadastrar condicao</h1><x-card><form method="POST" action="{{ route('catalog.conditions.store') }}">@csrf @include('catalog.conditions._form')</form></x-card></x-layouts.app>

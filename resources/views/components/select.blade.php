@@ -1,0 +1,1 @@
+@props(['label' => null, 'name']) @if($label)<label class="mb-1 block text-sm font-medium">{{ $label }}</label>@endif <select name="{{ $name }}" {{ $attributes->merge(['class' => 'rounded-md border-gray-300 text-sm focus:border-teal-500 focus:ring-teal-500']) }}>{{ $slot }}</select>

@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Modelos / Editar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Editar modelo</h1><x-card><form method="POST" action="{{ route('catalog.models.update', $model) }}">@csrf @method('PUT') @include('catalog.models._form')</form></x-card></x-layouts.app>

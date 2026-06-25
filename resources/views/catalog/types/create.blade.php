@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Tipos / Criar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Cadastrar tipo</h1><x-card><form method="POST" action="{{ route('catalog.types.store') }}">@csrf @include('catalog.types._form')</form></x-card></x-layouts.app>

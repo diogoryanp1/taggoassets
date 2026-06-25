@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb>Catalogo / Unidades / Criar</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold">Cadastrar unidade de medida</h1><x-card><form method="POST" action="{{ route('catalog.units.store') }}">@csrf @include('catalog.units._form')</form></x-card></x-layouts.app>

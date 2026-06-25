@@ -1,0 +1,1 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Entrar — Taggo Assets</title>@vite(['resources/css/app.css','resources/js/app.js'])</head><body class="grid min-h-screen place-items-center bg-[#0B1D2D] p-4">{{ $slot }}</body></html>

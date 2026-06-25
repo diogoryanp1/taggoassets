@@ -1,0 +1,1 @@
+<x-layouts.app><x-breadcrumb><a href="{{ route('units.index') }}">Unidades</a> / Nova</x-breadcrumb><h1 class="mb-5 font-[Sora] text-2xl font-bold text-[#0B1D2D]">Nova unidade</h1><x-card class="max-w-2xl">@include('units._form', ['action' => route('units.store')])</x-card></x-layouts.app>
